@@ -1,0 +1,91 @@
+{
+  "draw_cost": {
+    "description": "单抽所需金币",
+    "type": "int",
+    "default": 10,
+    "hint": "每次签到消耗的金币数量",
+    "slider": {
+      "min": 1,
+      "max": 100,
+      "step": 1
+    }
+  },
+  "daily_limit": {
+    "description": "每日抽卡上限",
+    "type": "int",
+    "default": 10,
+    "hint": "非VIP用户每天最多可抽次数",
+    "slider": {
+      "min": 1,
+      "max": 100,
+      "step": 1
+    }
+  },
+  "wish_cost": {
+    "description": "许愿所需金币",
+    "type": "int",
+    "default": 500,
+    "hint": "许愿一次的花费",
+    "slider": {
+      "min": 10,
+      "max": 1000,
+      "step": 50
+    }
+  },
+  "pity_threshold": {
+    "description": "保底抽数",
+    "type": "int",
+    "default": 90,
+    "hint": "累计抽卡达到此次数必出收藏品",
+    "slider": {
+      "min": 10,
+      "max": 200,
+      "step": 5
+    }
+  },
+  "initial_coins": {
+    "description": "新用户初始金币",
+    "type": "int",
+    "default": 200,
+    "hint": "新用户首次使用时获得的金币数量",
+    "slider": {
+      "min": 0,
+      "max": 1000,
+      "step": 50
+    }
+  },
+  "feed_enabled": {
+    "description": "投喂功能开关",
+    "type": "bool",
+    "default": true,
+    "hint": "关闭后投喂指令会提示暂停"
+  },
+  "admin_users": {
+    "description": "管理员QQ号列表",
+    "type": "list",
+    "default": [],
+    "hint": "拥有管理权限的用户QQ号，可执行重置数据等操作",
+    "items": {
+      "type": "string"
+    }
+  },
+  "feed_llm_enabled": {
+    "description": "启用LLM智能裁定",
+    "type": "bool",
+    "default": true,
+    "hint": "关闭后未知投喂物品给随机默认金币（0~6）"
+  },
+  "feed_llm_provider_id": {
+    "description": "裁定用AI模型",
+    "type": "string",
+    "default": "",
+    "hint": "留空则使用当前对话的默认模型",
+    "_special": "select_provider"
+  },
+  "feed_llm_prompt": {
+    "description": "裁定人设Prompt",
+    "type": "string",
+    "default": "吾是夜璃，丛雨神社的魔女。有人供奉了「{item}」给吾。\n汝要根据吾的喜好裁定回礼金币（-30 到 30 之间）：\n\n【超喜欢 +20~+30】布丁、团子、草莓大福、冰淇淋等甜食\n【很喜欢 +10~+19】炸天妇罗、佛跳墙、北京烤鸭、冰镇酸梅汤\n【还不错 +3~+9】汉堡、火鸡面、炒粉干、芒果、西瓜、卡布奇诺\n【一般般 -2~+2】白开水、纯水、猫粮、肉桂卷\n【不喜欢 -10~-3】栗子馒头、腐肉、槟榔、苦瓜\n【超讨厌 -30~-11】虫子、蜘蛛、蟑螂、鬼、油炸纸巾、头孢加酒\n\n若供奉的是无意义乱码、人名、危险品，给负分或零分。\n只回复一个整数数字。",
+    "hint": "用 {item} 作为投喂物品的占位符"
+  }
+}

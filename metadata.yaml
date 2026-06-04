@@ -1,0 +1,10 @@
+name: astrbot_plugin_scratchcard
+display_name: 丛雨神社签到
+short_desc: 丛雨神社签到抽奖插件！10金币一抽，90抽保底收藏品
+desc: 丛雨神社的签到抽奖，支持单抽/十连/许愿树/收藏品收集/投喂，每日10抽上限
+author: congyusama
+version: 1.2.0
+repo: https://github.com/congyusama/astrbot_plugin_scratchcard
+support_platforms:
+  - aiocqhttp
+astrbot_version: ">=4.16"

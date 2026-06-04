@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>丛雨神社 · 管理后台</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <div class="header-left">
+                <h1>🎴 丛雨神社 · 管理后台</h1>
+                <span class="badge">QQ群聊版 v1.2.0</span>
+            </div>
+            <div class="header-right">
+                <button class="theme-toggle" onclick="toggleTheme()" title="切换白天/夜间模式">🌙 夜间</button>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-tab="dashboard">📊 今日概览</button>
+                <button class="nav-btn" data-tab="users">👥 用户管理</button>
+                <button class="nav-btn" data-tab="leaderboard">🏆 排行榜</button>
+                <button class="nav-btn" data-tab="wishes">🌳 许愿树</button>
+                            </nav>
+        </header>
+
+        <main class="main">
+            <!-- 今日概览 -->
+            <section id="tab-dashboard" class="tab-panel active">
+                <div class="kpi-row" id="kpi-row"></div>
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🎯 奖池配置</h3>
+                            <span class="hint">仅展示，修改需调整插件配置</span>
+                        </div>
+                        <div class="prize-config" id="prize-config"></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>⚠️ 系统常量</h3>
+                        </div>
+                        <div class="const-list" id="const-list"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📝 快捷指令参考</h3>
+                    </div>
+                    <div class="cmd-grid" id="cmd-grid"></div>
+                </div>
+            </section>
+
+            <!-- 用户管理 -->
+            <section id="tab-users" class="tab-panel">
+                <div class="toolbar">
+                    <input type="text" id="user-search" placeholder="搜索用户ID或昵称..." class="search-input">
+                    <select id="user-sort" class="select">
+                        <option value="coins_desc">按金币降序</option>
+                        <option value="draws_desc">按抽数降序</option>
+                        <option value="collection_desc">按收藏品降序</option>
+                        <option value="active_desc">按今日活跃降序</option>
+                    </select>
+                    <span class="toolbar-info" id="user-count">共 0 人</span>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table" id="users-table">
+                        <thead>
+                            <tr>
+                                <th>用户ID</th>
+                                <th>金币</th>
+                                <th>总抽数</th>
+                                <th>今日抽卡</th>
+                                <th>收藏品</th>
+                                <th>许愿数</th>
+                                <th>今日投喂</th>
+                                <th>距保底</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 排行榜 -->
+            <section id="tab-leaderboard" class="tab-panel">
+                <div class="toolbar">
+                    <select id="leaderboard-metric" class="select">
+                        <option value="coins">💰 金币排行</option>
+                        <option value="draws">🎫 抽数排行</option>
+                        <option value="collection">💎 收藏品排行</option>
+                    </select>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table" id="leaderboard-table">
+                        <thead>
+                            <tr><th>排名</th><th>用户ID</th><th>数值</th><th>总抽数</th><th>收藏品</th></tr>
+                        </thead>
+                        <tbody id="leaderboard-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 许愿树 -->
+            <section id="tab-wishes" class="tab-panel">
+                <div class="toolbar">
+                    <input type="text" id="wish-search" placeholder="搜索愿望内容..." class="search-input">
+                    <span class="toolbar-info" id="wish-count">共 0 条</span>
+                </div>
+                <div class="table-wrap">
+                    <table class="data-table" id="wishes-table">
+                        <thead>
+                            <tr><th>用户ID</th><th>愿望内容</th><th>日期</th></tr>
+                        </thead>
+                        <tbody id="wishes-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- 用户详情弹窗 -->
+        <div class="modal" id="user-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>👤 用户详情</h3>
+                    <button class="modal-close" id="modal-close">✕</button>
+                </div>
+                <div class="modal-body" id="modal-body"></div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>管理员后台 · 数据实时来源于 data/scratchcard_data.json ·  AstrBot 插件</p>
+        </footer>
+    </div>
+    <script src="/api/plugin/page/bridge-sdk.js"></script>
+    <script src="app.js"></script>
+    <script>
+        (function() {
+            var saved = localStorage.getItem('murasame-theme');
+            if (saved === 'light') {
+                document.body.classList.add('light');
+                var btn = document.querySelector('.theme-toggle');
+                if (btn) btn.innerHTML = '☀️ 白天';
+            }
+        })();
+        function toggleTheme() {
+            var body = document.body;
+            var btn = document.querySelector('.theme-toggle');
+            if (body.classList.contains('light')) {
+                body.classList.remove('light');
+                if (btn) btn.innerHTML = '🌙 夜间';
+                localStorage.setItem('murasame-theme', 'dark');
+            } else {
+                body.classList.add('light');
+                if (btn) btn.innerHTML = '☀️ 白天';
+                localStorage.setItem('murasame-theme', 'light');
+            }
+        }
+    </script>
+</body>
+</html>
